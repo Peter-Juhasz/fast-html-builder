@@ -306,6 +306,7 @@ Fortunately, [UrlEncoder](https://docs.microsoft.com/en-us/dotnet/api/system.tex
 We can't write the output of URL encoding continuing the HTML buffer, because then the input and output of the HTML encoding would overlap each other, which is not allowed. So, we need to find another option:
  - if the text to be encoded is usually small, we could allocate a new temporary buffer on the stack using `stackalloc` which gets destroyed immediately after use
  - if the text is long, we could use an `ArrayPool<char>` to rent longer, reusable buffers
+ - dedicate an instance level buffer `char[]` for URL encoding (resize if needed), as the builder is not thread-safe anyway, and if we pool the instances, the buffer can be kept alive across writes
  - request a sub-buffer large enough from the HTML buffer, to fit both the URL encoded output and then its HTML encoded output. It is not as crazy as it may sound, because it is very likely that the URL data written to the final HTML buffer is going to be followed by HTML segments that are close to the length (or longer) of the URL encoded partial result.
 
 ### Encoding
