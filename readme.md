@@ -153,6 +153,7 @@ public void AppendHtml(ReadOnlySpan<char> span)
 {
 	var target = Writer.GetSpan(sizeHint: span.Length);
 	span.CopyTo(target);
+	Writer.Advance(span.Length);
 }
 ```
 
